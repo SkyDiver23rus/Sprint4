@@ -9,7 +9,7 @@ public class TaskManager {
 
     private int idCounter = 0;
 
-    private generateNextId(){
+    private int generateNextId(){
         return idCounter++;
     }
 
@@ -27,15 +27,15 @@ public class TaskManager {
     }
 
     public Epic createEpic(Epic epic) {
-        epics.setId(generateNextId());
+        epic.setId(generateNextId());
         epics.put(epic.getId(), epic);
         return epic;
     }
 
-    public void updateEpicStatus(Epic epic) {
+    public Epic updateEpicStatus(Epic epic) {
         if (epic.getSubtaskIds().isEmpty()) {
             epic.setStatus(Status.NEW);
-            return;
+            return epic;
         }
 
         boolean allDone = true; boolean allNew = true; 
@@ -97,11 +97,11 @@ public class TaskManager {
 
 
     public void removeTask(int id) {
-        tasks.remove(id);
+        this.tasks.remove(id);
     }
     public void removeTask(Task task) {
         if (task == null) {} else {
-            tasks.remove(task.getId());
+            this.tasks.remove(task.getId());
         }
     }
 
@@ -114,7 +114,7 @@ public class TaskManager {
             Epic epic = subtask.getEpic();
             epic.removeSubtask(subtask);
             this.updateEpicStatus(epic); 
-            epics.set(epic.getId(), epic);
+            this.epics.put(epic.getId(), epic);
         }
     }
 
@@ -132,7 +132,7 @@ public class TaskManager {
     }
 
     public void removeAllTasks() {
-        tasks.clear();
+        this.tasks.clear();
     }
 
     public void removeAllSubTasks() {
@@ -140,24 +140,24 @@ public class TaskManager {
             epic.removeAllSubtask();
             this.updateEpicStatus(epic); 
         }
-        subtasks.clear();
+        this.subtasks.clear();
     }
 
     public void removeAllEpic() {
-        epics.clear();
-        subtasks.clear();    
+        this.epics.clear();
+        this.subtasks.clear();    
     }
 
     public void removeAll() {
-        removeAllTasks();
-        removeAllSubTasks();
-        removeAllEpic();
+        this.removeAllTasks();
+        this.removeAllSubTasks();
+        this.removeAllEpic();
     }
 
 
     public List<Subtask> getSubtasksByEpic(int epicId) {
-        if (epics.containsKey(epicId)){
-            return getSubtasksByEpic(this.epics.get(epicId));
+        if (this.epics.containsKey(epicId)){
+            return this.getSubtasksByEpic(this.epics.get(epicId));
         } else {
             return null;
         }

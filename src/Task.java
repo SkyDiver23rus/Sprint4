@@ -1,8 +1,8 @@
 import java.util.Objects;
 
 public class Task {
-    private final int id;
-    private bool managed;
+    private int id;
+    private boolean managed;
 
     private String title;
     private String description;

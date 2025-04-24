@@ -39,6 +39,7 @@ public class Epic extends Task {
     }
 
     public Epic removeAllSubtask() {
-        this.subtaskId.clear();
+        this.subtaskIds.clear();
+        return this;
     }
 }

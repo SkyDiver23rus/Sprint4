@@ -10,7 +10,7 @@ public class Subtask extends Task {
         this(-2, title, description, Status.NEW, epic);
     }
 
-    public int getEpic() {
+    public Epic getEpic() {
         return epic;
     }
 
