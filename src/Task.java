@@ -2,7 +2,6 @@ import java.util.Objects;
 
 public class Task {
     private int id;
-    private boolean managed;
 
     private String title;
     private String description;
@@ -10,27 +9,30 @@ public class Task {
 
     public Task(int id, String title, String description, Status status) {
         this.id = id;
-        this.managed = false;
-
         this.title = title;
         this.description = description;
         this.status = status;
     }
 
+    // Перегруженный конструктор, потому что все таски по умолчанию новые
     public Task(String title, String description) {
-        this(-1, title, description, Status.NEW);
+        this(-999, title, description, Status.NEW);
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        if (this.managed) {} else {
+    public void setId(int id, boolean forced) {
+        if (forced || this.id < 0) {
             this.id = id;
-            this.managed = true;
         }
     }
+
+    public void setId(int id) {
+        this.setId(id, false);
+    }
+
 
     public String getTitle() {
         return title;
@@ -44,8 +46,16 @@ public class Task {
         return status;
     }
 
-    public void setStatus(Status status) {
+    // Возвращение this позволяет писать fluent код
+    public Task setStatus(Status status) {
         this.status = status;
+        return this;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "(id=" + String.valueOf(this.getId()) + ")";
     }
 
     @Override

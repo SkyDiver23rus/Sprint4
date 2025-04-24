@@ -1,32 +1,43 @@
 public class Main {
 
     /*
-        Все задачи: [Task@1f, Task@20]
-        Все эпики: [Epic@21]
-        Все подзадачи: [Subtask@22, Subtask@23, Subtask@24]
-        Оставшиеся задачи после удаления: [Task@20]
-        Подзадачи эпика: [Subtask@22, Subtask@23, Subtask@24]
-        Статус эпика после завершения подзадачи: IN_PROGRESS
-        Все задачи после удаления всех: []
+    Все задачи: [Task(id=0), Task(id=1)]
+    Все эпики: [Epic(id=2)]
+    Все подзадачи: [
+        SubTask(id=3,of=Epic(id=2)), 
+        SubTask(id=4,of=Epic(id=2)), 
+        SubTask(id=5,of=Epic(id=2))
+    ]
+    Оставшиеся задачи после удаления: [Task(id=1)]
+    Подзадачи эпика: [
+        SubTask(id=3,of=Epic(id=2)), 
+        SubTask(id=4,of=Epic(id=2)), 
+        SubTask(id=5,of=Epic(id=2))
+    ]
+    Статус эпика после завершения подзадачи: IN_PROGRESS
+    Все задачи после удаления всех: []
     */
 
     public static void main(String[] args) {
         TaskManager manager = new TaskManager();
 
-        Task task1 = manager.createTask(new Task("Переезд", "Переезд в новую квартиру")); // Создание задач и эпиков
-        Task task2 = manager.createTask(new Task("Мебель", "Покупка мебели"));
-        Epic epic1 = manager.createEpic(new Epic("Переезд", "Эпик для переезда"));
+        // Создание задач и эпиков
+        Task task1 = manager.attachTask(new Task("Переезд", "Переезд в новую квартиру")); 
+        Task task2 = manager.createTask("Мебель", "Покупка мебели");
+        Epic epic1 = manager.attachEpic(new Epic("Переезд", "Эпик для переезда"));
 
-        Subtask subtask1 = manager.createSubtask(new Subtask("Упаковать вещи", "Упаковать все вещи в коробки", epic1)); // Создание подзадач
-        Subtask subtask2 = manager.createSubtask(new Subtask("Покупка мебели", "Выбрать мебель", epic1));
-        Subtask subtask3 = manager.createSubtask(new Subtask("Покупка мебели", "Заказать доставку", epic1));
+        // Создание подзадач
+        Subtask subtask1 = manager.attachSubtask(new Subtask("Упаковать вещи", "Упаковать все вещи в коробки", epic1)); 
+        Subtask subtask2 = manager.attachSubtask(new Subtask("Покупка мебели", "Выбрать мебель", epic1));
+        Subtask subtask3 = manager.createSubtask("Покупка мебели", "Заказать доставку", epic1);
 
-        System.out.println("Все задачи: " + manager.getAllTasks()); // Вывод всех задач
+        // Вывод всех задач
+        System.out.println("Все задачи: " + manager.getAllTasks()); 
         System.out.println("Все эпики: " + manager.getAllEpics());
         System.out.println("Все подзадачи: " + manager.getAllSubtasks());
 
-
-        manager.removeTask(task1);  // Удаление задач
+        // Удаление задач
+        manager.removeTask(task1);  
 
         // Вывод оставшихся задач после удаления
         System.out.println("Оставшиеся задачи после удаления: " + manager.getAllTasks()); 

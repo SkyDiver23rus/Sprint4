@@ -13,21 +13,61 @@ public class TaskManager {
         return idCounter++;
     }
 
-    public Task createTask(Task task) {
-        task.setId(generateNextId());
+    // Создаем таск из менеджера
+    public Task createTask(String title, String description) {
+        return this.attachTask(new Task(title, description));
+    }
+
+    // Создаем эпик из менеджера
+    public Epic createEpic(String title, String description) {
+        return this.attachEpic(new Epic(title, description));
+    }
+
+    // Создаем сабтаск из менеджера
+    public Subtask createSubtask(String title, String description, Epic epic) {
+        return this.attachSubtask(new Subtask(title, description, epic));
+    }
+
+    // Мы не создаем Таск, а ставим его на содержание (регистрируем)
+    public Task attachTask(Task task) {
+        int taskId = task.getId();
+        
+        // Если уже был управляемым, и его нет в данном менеджере, а так же номер меньше чем текущий, 
+        // то в менеджере есть окно куда можно добавить таск без перегенерации
+        if(this.isManaged(task)){
+            if (this.getTaskById(taskId) == null && taskId < this.idCounter){} else {
+                task.setId(this.generateNextId(), true);
+            }
+        } else {
+            task.setId(this.generateNextId());
+        }
         tasks.put(task.getId(), task);
         return task;
     }
 
-    public Subtask createSubtask(Subtask subtask) {
-        subtask.setId(generateNextId());
+    public Subtask attachSubtask(Subtask subtask) {
+        int subtaskId = subtask.getId();
+        if(this.isManaged(subtask)){
+            if (this.getTaskById(subtaskId) == null && subtaskId < this.idCounter){} else {
+                subtask.setId(this.generateNextId(), true);
+            }
+        } else {
+            subtask.setId(this.generateNextId());
+        }
         subtask.getEpic().addSubtask(subtask);
         subtasks.put(subtask.getId(), subtask);
         return subtask;
     }
 
-    public Epic createEpic(Epic epic) {
-        epic.setId(generateNextId());
+    public Epic attachEpic(Epic epic) {
+        int epicId = epic.getId();
+        if(this.isManaged(epic)){
+            if (this.getTaskById(epicId) == null && epicId < this.idCounter){} else {
+                epic.setId(this.generateNextId(), true);
+            }
+        } else {
+            epic.setId(this.generateNextId());
+        }
         epics.put(epic.getId(), epic);
         return epic;
     }
@@ -69,6 +109,9 @@ public class TaskManager {
         return epic;
     }
 
+    public boolean isManaged(Task task){
+        return task.getId() >= 0;
+    }
 
     public Task getTaskById(int id) {
         return tasks.get(id);
@@ -153,7 +196,6 @@ public class TaskManager {
         this.removeAllSubTasks();
         this.removeAllEpic();
     }
-
 
     public List<Subtask> getSubtasksByEpic(int epicId) {
         if (this.epics.containsKey(epicId)){

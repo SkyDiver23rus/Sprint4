@@ -6,17 +6,25 @@ public class Subtask extends Task {
         this.epic = epic;
     }
 
+    // Перегруженный конструктор, потому что все сабтаски по умолчанию новые
     public Subtask(String title, String description, Epic epic) {
-        this(-2, title, description, Status.NEW, epic);
+        this(-998, title, description, Status.NEW, epic);
     }
 
+    // Возвращаем ссылку на эпик
     public Epic getEpic() {
         return epic;
     }
 
-    // А вдруг мы решим переместить сабтаск в другой Эпик ??
+    // Реализация не используется. 
+    // Но вдруг мы решим переместить сабтаск в другой Эпик ))
     public Subtask setEpic(Epic epic){
         this.epic = epic;
         return this;
+    }
+    
+    @Override
+    public String toString() {
+        return "SubTask(id=" + String.valueOf(this.getId()) + ",of=" + this.getEpic() + ")";
     }
 }
