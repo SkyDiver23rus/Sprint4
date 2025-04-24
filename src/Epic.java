@@ -4,46 +4,48 @@ import java.util.List;
 public class Epic extends Task {
     private List<Integer> subtaskIds;
 
-    public Epic(int id, String title, String description) {
-        super(id, title, description, Status.NEW);
+    public Epic(int id, String title, String description, Status status) {
+        super(id, title, description, status);
         this.subtaskIds = new ArrayList<>();
+    }
+
+    // Перегруженный конструктор, потому что все эпики по умолчанию новые
+    // до того как к ним добавят сабтаски 
+    public Epic(String title, String description) {
+        this(-997, title, description, Status.NEW);
     }
 
     public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
-    public void addSubtask(int subtaskId) {
-
-        subtaskIds.add(subtaskId);
+    public Epic addSubtask(Subtask subtask) {
+        int subtaskId = subtask.getId();
+        if(subtaskIds.contains(subtaskId)) {} else {
+            subtaskIds.add(subtaskId);
+        }
+        subtask.setEpic(this);
+        return this;
     }
 
-    public void updateStatus(TaskManager taskManager) {
-        if (subtaskIds.isEmpty()) {
-            setStatus(Status.NEW);
-            return;
+    // Удаление сабтаска из этого эпика по id
+    public Epic removeSubtask(int subtaskId) {
+        if(subtaskIds.contains(subtaskId)) {
+            subtaskIds.remove(subtaskId);
         }
+        return this;
+    }
 
-        boolean allDone = true;
-        boolean anyInProgress = false;
+    // Удаление сабтаска из этого эпика по экземпляру (перегруженная версия)
+    public Epic removeSubtask(Subtask subtask) {
+        int subtaskId = subtask.getId();
+        this.removeSubtask(subtaskId);
+        return this;
+    }
 
-        for (int subtaskId : subtaskIds) {
-            Status status = taskManager.getSubtaskById(subtaskId).getStatus();
-
-            if (status != Status.DONE) {
-                allDone = false;
-                if (status == Status.IN_PROGRESS) {
-                    anyInProgress = true;
-                }
-            }
-        }
-
-        if (allDone) {
-            setStatus(Status.DONE);
-        } else if (anyInProgress) {
-            setStatus(Status.IN_PROGRESS);
-        } else {
-            setStatus(Status.NEW);
-        }
+    // Удаление всех сабтасков из этого эпика
+    public Epic removeAllSubtask() {
+        this.subtaskIds.clear();
+        return this;
     }
 }

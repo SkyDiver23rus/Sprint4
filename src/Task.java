@@ -1,7 +1,8 @@
 import java.util.Objects;
 
 public class Task {
-    private final int id;
+    private int id;
+
     private String title;
     private String description;
     private Status status;
@@ -13,9 +14,25 @@ public class Task {
         this.status = status;
     }
 
+    // Перегруженный конструктор, потому что все таски по умолчанию новые
+    public Task(String title, String description) {
+        this(-999, title, description, Status.NEW);
+    }
+
     public int getId() {
         return id;
     }
+
+    public void setId(int id, boolean forced) {
+        if (forced || this.id < 0) {
+            this.id = id;
+        }
+    }
+
+    public void setId(int id) {
+        this.setId(id, false);
+    }
+
 
     public String getTitle() {
         return title;
@@ -29,8 +46,16 @@ public class Task {
         return status;
     }
 
-    public void setStatus(Status status) {
+    // Возвращение this позволяет писать fluent код
+    public Task setStatus(Status status) {
         this.status = status;
+        return this;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "(id=" + String.valueOf(this.getId()) + ")";
     }
 
     @Override
